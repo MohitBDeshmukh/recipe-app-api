@@ -20,7 +20,10 @@ ENV DEV=$dev
 
 # Install dependencies and ensure development requirements are installed
 RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip --no-cache-dir && \
+    /py/bin/pip install --upgrade pip --no-cache-dir pip && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt --no-cache-dir && \
     if [ "$DEV" = "true" ]; then /py/bin/pip install -r /tmp/requirements.dev.txt --no-cache-dir; fi && \
     rm -rf /tmp && \
